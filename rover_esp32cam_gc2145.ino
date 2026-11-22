@@ -1,7 +1,4 @@
-// ===== MARS ROVER - ESP32-CAM with GC2145 sensor (no hardware JPEG) =====
-// The GC2145 cannot output JPEG, so we capture RGB565 and convert each frame
-// to JPEG in software. Expect roughly 3-8 fps at QVGA.
-// Board: "AI Thinker ESP32-CAM". Stream URL: http://<ip>:81/stream
+
 #include "esp_camera.h"
 #include "img_converters.h"
 #include <WiFi.h>
@@ -37,7 +34,7 @@ static esp_err_t streamHandler(httpd_req_t* req) {
 
     uint8_t* jpg = NULL;
     size_t jpgLen = 0;
-    bool ok = frame2jpg(fb, 70, &jpg, &jpgLen);   // software JPEG, quality 70
+    bool ok = frame2jpg(fb, 70, &jpg, &jpgLen);
     esp_camera_fb_return(fb);
     if (!ok) { res = ESP_FAIL; break; }
 
@@ -70,8 +67,8 @@ void setup() {
   c.pin_sccb_sda = SIOD_GPIO_NUM; c.pin_sccb_scl = SIOC_GPIO_NUM;
   c.pin_pwdn = PWDN_GPIO_NUM; c.pin_reset = RESET_GPIO_NUM;
   c.xclk_freq_hz = 20000000;
-  c.pixel_format = PIXFORMAT_RGB565;      // GC2145 has no JPEG output
-  c.frame_size = FRAMESIZE_QVGA;          // keep at QVGA or lower for non-JPEG
+  c.pixel_format = PIXFORMAT_RGB565;     
+  c.frame_size = FRAMESIZE_QVGA;          
   c.jpeg_quality = 12;
   c.fb_count = 2;
   c.fb_location = CAMERA_FB_IN_PSRAM;
