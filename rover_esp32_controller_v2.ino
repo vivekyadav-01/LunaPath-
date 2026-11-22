@@ -1,14 +1,10 @@
-// ===== MARS ROVER - ESP32 DevKit (WiFi controller + dashboard) =====
-// Hosts a web page with drive buttons, live distance, and the ESP32-CAM stream.
-// Wiring: ESP32 GPIO17 (TX2) -> Uno pin 11 (RX)
-//         Uno pin 12 (TX) -> voltage divider (1k/2k) -> ESP32 GPIO16 (RX2)
-//         Common GND between all boards.
+
 #include <WiFi.h>
 #include <WebServer.h>
 
 const char* WIFI_SSID = "Rao sahab";
 const char* WIFI_PASS = "Vivek@2006";
-const char* CAM_IP    = "10.149.174.21";   // IP only, no port. Update if the camera's IP changes.
+const char* CAM_IP    = "10.149.174.21";   
 
 WebServer server(80);
 int distanceCm = 999;
@@ -68,10 +64,10 @@ void handleDist() { server.send(200, "text/plain", String(distanceCm)); }
 
 void setup() {
   Serial.begin(115200);
-  Serial2.begin(9600, SERIAL_8N1, 16, 17);  // RX2=16, TX2=17
+  Serial2.begin(9600, SERIAL_8N1, 16, 17);  
 
   WiFi.mode(WIFI_STA);
-  WiFi.setSleep(false);          // disable WiFi power-saving for a stable link
+  WiFi.setSleep(false);          
   WiFi.setAutoReconnect(true);
   WiFi.begin(WIFI_SSID, WIFI_PASS);
   while (WiFi.status() != WL_CONNECTED) { delay(400); Serial.print("."); }
@@ -84,7 +80,7 @@ void setup() {
 }
 
 void loop() {
-  // Check WiFi every 5 s and reconnect if the link dropped
+
   if (millis() - lastCheck > 5000) {
     lastCheck = millis();
     if (WiFi.status() != WL_CONNECTED) {
@@ -99,7 +95,7 @@ void loop() {
 
   server.handleClient();
 
-  while (Serial2.available()) {            // parse "D:123" telemetry from Uno
+  while (Serial2.available()) {            
     char c = Serial2.read();
     if (c == '\n') {
       if (rxLine.startsWith("D:")) distanceCm = rxLine.substring(2).toInt();
